@@ -10,13 +10,14 @@
 <body onload="init();">
     <canvas id="testCanvas" width="500" height="500"></canvas>
     <script>
-        init = () => {
-            let stage = new createjs.stage("testCanvas");
+        function init(){
+            let stage = new createjs.Stage("testCanvas");
             let circle = new createjs.Shape();
             circle.graphics.beginFill("Red").drawCircle(0,0, 90);
             circle.x = 250;
             circle.y = 250;
             stage.addChild(circle);
+            stage.update();
         }
     </script>
 </body>
