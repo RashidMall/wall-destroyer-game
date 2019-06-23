@@ -10,14 +10,49 @@
 <body onload="init();">
     <canvas id="testCanvas" width="500" height="500"></canvas>
     <script>
-        function init(){
-            let stage = new createjs.Stage("testCanvas");
-            let circle = new createjs.Shape();
-            circle.graphics.beginFill("Red").drawCircle(0,0, 90);
-            circle.x = 250;
-            circle.y = 250;
-            stage.addChild(circle);
-            stage.update();
+        const TARGET_WIDTH = 60;
+        const TARGET_HEIGHT = 30;
+        const PLAYER_WIDTH = 100;
+        const PLAYER_HEIGHT = 20;
+        let stage;
+        let player;
+        let ball;
+
+        const init = () => {
+            stage = new createjs.Stage("testCanvas");
+            createjs.Ticker.framerate === 60;
+            createjs.Ticker.addEventListener("tick", stage);
+
+            console.log("init launched");
+            createBall();
+            createPlayer();
+            createTarget();
+        }
+
+        const createTarget = () => {
+            let target = new createjs.Shape();
+            target.graphics.beginFill('#FF1919');
+            target.graphics.drawRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+            target.graphics.endFill();
+            stage.addChild(target);
+            console.log("Target created");
+        }
+
+        const createBall = () => {
+            ball = new createjs.Shape();
+            ball.graphics.beginFill('Black');
+            ball.graphics.drawCircle(0, 0, 8);
+            ball.x = 100;
+            ball.y = 100;
+            stage.addChild(ball);
+        }
+
+        const createPlayer = () => {
+            player = new createjs.Shape();
+            player.graphics.beginFill('#000000');
+            player.graphics.drawRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
+            player.y = 200;
+            stage.addChild(player);
         }
     </script>
 </body>
