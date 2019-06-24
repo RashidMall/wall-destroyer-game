@@ -35,7 +35,17 @@
             target.graphics.drawRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
             target.graphics.endFill();
             stage.addChild(target);
-            console.log("Target created");
+
+            target.regX = TARGET_WIDTH / 2;
+            target.regY = TARGET_HEIGHT / 2;
+            target.x = 50;
+            target.y = 50;
+
+            removeTarget(target);
+        }
+
+        const removeTarget = (target) => {
+            createjs.Tween.get(target, {}).to({scaleX: 0, scaleY: 0}, 500)
         }
 
         const createBall = () => {
