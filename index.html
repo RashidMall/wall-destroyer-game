@@ -8,7 +8,7 @@
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body onload="init();">
-    <canvas id="testCanvas" width="500" height="500"></canvas>
+    <canvas id="testCanvas" width="1000" height="500"></canvas>
     <script>
         const TARGET_WIDTH = 60;
         const TARGET_HEIGHT = 30;
@@ -26,10 +26,18 @@
             console.log("init launched");
             createBall();
             createPlayer();
-            createTarget();
+            createTargetGrid();
         }
 
-        const createTarget = () => {
+        const createTargetGrid = () => {
+            for(let i = 0; i < 14; i++){
+                for(let j = 0; j < 5; j++){
+                    createTarget(i*(TARGET_WIDTH + 10) + 40, j*(TARGET_HEIGHT+5) + 20);
+                }
+            }
+        }
+
+        const createTarget = (x, y) => {
             let target = new createjs.Shape();
             target.graphics.beginFill('#FF1919');
             target.graphics.drawRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
@@ -38,10 +46,8 @@
 
             target.regX = TARGET_WIDTH / 2;
             target.regY = TARGET_HEIGHT / 2;
-            target.x = 50;
-            target.y = 50;
-
-            removeTarget(target);
+            target.x = x;
+            target.y = y;
         }
 
         const removeTarget = (target) => {
