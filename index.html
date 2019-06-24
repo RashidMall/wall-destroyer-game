@@ -8,7 +8,7 @@
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body onload="init();">
-    <canvas id="testCanvas" width="1000" height="500"></canvas>
+    <canvas id="testCanvas" width="1000" height="600"></canvas>
     <script>
         const TARGET_WIDTH = 60;
         const TARGET_HEIGHT = 30;
@@ -58,8 +58,8 @@
             ball = new createjs.Shape();
             ball.graphics.beginFill('Black');
             ball.graphics.drawCircle(0, 0, 8);
-            ball.x = 100;
-            ball.y = 100;
+            ball.x = stage.canvas.width / 2;
+            ball.y = stage.canvas.height / 2;
             stage.addChild(ball);
         }
 
@@ -67,7 +67,9 @@
             player = new createjs.Shape();
             player.graphics.beginFill('#000000');
             player.graphics.drawRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
-            player.y = 200;
+            player.x = stage.canvas.width / 2 - (PLAYER_WIDTH/2);
+            player.y = stage.canvas.height * 0.95;
+
             stage.addChild(player);
         }
     </script>
