@@ -35,14 +35,44 @@
 
             if(ball.up){
                 ball.y -= ball.ySpeed;
-                ball.x -= ball.ySpeed;
+            }else{
+                ball.y += ball.ySpeed;
             }
 
-            for(let target of targets){
-                if(checkCollision(ball, target)){
-                    removeTarget(target);
+            if(ball.right){
+                ball.x += ball.xSpeed;
+            }else{
+                ball.x -= ball.xSpeed;
+            }
+
+            for(let i = 0; i < targets.length; i++){
+                if(checkCollision(ball, targets[i])){
+                    removeTarget(targets[i])
+                    targets.splice(i, 1);
+                    i--;
                 }
             }
+
+            // Check if ball reached the walls
+            if(ball.x + BALL_RADIUS >= stage.canvas.width){
+                ball.x = stage.canvas.width - BALL_RADIUS;
+                ball.right = false;
+            }
+            if(ball.x - BALL_RADIUS <= 0){
+                ball.x = BALL_RADIUS;
+                ball.right = true;
+            }
+            if(ball.y - BALL_RADIUS <= 0){
+                ball.y = BALL_RADIUS;
+                ball.up = false;
+            }
+            if(ball.y + BALL_RADIUS >= stage.canvas.height){
+                ball.y = stage.canvas.height - BALL_RADIUS;
+                ball.up = true;
+            }
+
+            ball.lastX = ball.x;
+            ball.lastY = ball.y;
         }
 
         const checkCollision = (ball, target) =>{
