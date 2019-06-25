@@ -23,17 +23,28 @@
         let score = 0;
         let lives = 3;
         let scoreText;
+        let hasGameStarted = false;
 
         const init = () => {
             stage = new createjs.Stage("testCanvas");
             createjs.Ticker.framerate === 60;
             createjs.Ticker.addEventListener("tick", tick);
 
+            createPlayer();
             createScoreText();
             addToScore(0);
             createBall();
-            createPlayer();
             createTargetGrid();
+
+            stage.on("stagemousedown", (event) => {
+                if(!hasGameStarted){
+                    hasGameStarted = true;
+                    ball.xSpeed = 5;
+                    ball.ySpeed = 5;
+                    ball.up = true;
+                    ball.right = true;
+                }
+            });
         }
 
         /** SCORE **/
@@ -55,14 +66,33 @@
             ball.ySpeed = 0;
             ball.x = player.x;
             ball.y = player.y - PLAYER_HEIGHT/2 - BALL_RADIUS;
+            hasGameStarted = false;
         }
 
         const showScoreText = () =>{
             return scoreText.text = `Score: ${score} | Lives: ${lives}`;
         }
+        /** /SCORE **/
 
         const tick = () => {
+            player.x = stage.mouseX;
+
             stage.update();
+
+            // Keep player in the stage
+            if(player.x + PLAYER_WIDTH/2 > stage.canvas.width){
+                player.x = stage.canvas.width - PLAYER_WIDTH/2;
+            }
+            if(player.x - PLAYER_WIDTH/2 < 0){
+                player.x = PLAYER_WIDTH/2;
+            }
+
+            if(!hasGameStarted){
+                ball.x = player.x;
+                ball.y = player.y - PLAYER_HEIGHT/2 -BALL_RADIUS;
+                stage.update();
+                return;
+            }
 
             if(ball.up){
                 ball.y -= ball.ySpeed;
@@ -203,14 +233,14 @@
             ball = new createjs.Shape();
             ball.graphics.beginFill('Black');
             ball.graphics.drawCircle(0, 0, BALL_RADIUS);
-            ball.x = stage.canvas.width / 2;
-            ball.y = stage.canvas.height / 2;
+            ball.x = player.x;
+            ball.y = player.y - PLAYER_HEIGHT/2 - BALL_RADIUS;
             stage.addChild(ball);
 
             ball.up = true;
             ball.right = true;
-            ball.xSpeed = 5;
-            ball.ySpeed = 5;
+            ball.xSpeed = 0;
+            ball.ySpeed = 0;
             ball.lastX = 0;
             ball.lastY = 0;
         }
@@ -220,7 +250,7 @@
             player.graphics.beginFill('#000000');
             player.graphics.drawRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
             player.x = stage.canvas.width / 2 - (PLAYER_WIDTH/2);
-            player.y = stage.canvas.height * 0.95;
+            player.y = stage.canvas.height * 0.9;
             player.regX = PLAYER_WIDTH/2;
             player.regY = PLAYER_HEIGHT/2;
             player.setBounds(player.regX, player.regY, PLAYER_WIDTH, PLAYER_HEIGHT);
