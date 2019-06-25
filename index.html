@@ -8,7 +8,7 @@
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body onload="init();">
-    <canvas id="testCanvas" width="1000" height="600"></canvas>
+    <canvas id="testCanvas" width="1000" height="500"></canvas>
     <script>
         const TARGET_WIDTH = 60;
         const TARGET_HEIGHT = 30;
@@ -52,6 +52,10 @@
                     targets.splice(i, 1);
                     i--;
                 }
+            }
+
+            if(checkCollision(ball, player)){
+                ballSpeedAfterCollision(ball, player);
             }
 
             // Check if ball reached the walls
@@ -132,7 +136,7 @@
                 ball.xSpeed = FULL_X_SPEED - ((ball.x - startPoint)/(midPoint - startPoint)) * FULL_X_SPEED;
             }else{
                 ball.right = true;
-                ball.xSpeed = FULL_X_SPEED - ((endPoint - ballElement.x)/(endPoint - midPoint)) * FULL_X_SPEED;
+                ball.xSpeed = FULL_X_SPEED - ((endPoint - ball.x)/(endPoint - midPoint)) * FULL_X_SPEED;
             }
         }
 
@@ -162,6 +166,7 @@
 
         const removeTarget = (target) => {
             createjs.Tween.get(target, {}).to({scaleX: 0, scaleY: 0}, 500)
+            setTimeout(stage.removeChild(target), 500, target);
         }
 
         const createBall = () => {
@@ -174,8 +179,8 @@
 
             ball.up = true;
             ball.right = true;
-            ball.xSpeed = 0;
-            ball.ySpeed = 1;
+            ball.xSpeed = 5;
+            ball.ySpeed = 5;
             ball.lastX = 0;
             ball.lastY = 0;
         }
