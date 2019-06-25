@@ -15,6 +15,7 @@
         const PLAYER_WIDTH = 100;
         const PLAYER_HEIGHT = 20;
         const BALL_RADIUS = 8;
+        const FULL_X_SPEED = 10;
         let targets = [];
         let stage;
         let player;
@@ -119,6 +120,20 @@
                 return true;
             }
             return false;
+        }
+
+        const ballSpeedAfterCollision = (ball, element) => {
+            let startPoint = element.x - element.getBounds().width/2;
+            let midPoint = element.x;
+            let endPoint = element.x + element.getBounds().width/2;
+
+            if(ball.X < midPoint){
+                ball.right = false;
+                ball.xSpeed = FULL_X_SPEED - ((ball.x - startPoint)/(midPoint - startPoint)) * FULL_X_SPEED;
+            }else{
+                ball.right = true;
+                ball.xSpeed = FULL_X_SPEED - ((endPoint - ballElement.x)/(endPoint - midPoint)) * FULL_X_SPEED;
+            }
         }
 
         const createTargetGrid = () => {
