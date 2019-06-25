@@ -75,17 +75,50 @@
             ball.lastY = ball.y;
         }
 
-        const checkCollision = (ball, target) =>{
-            if(
-                ball.x + BALL_RADIUS <= target.x - TARGET_WIDTH/2 ||
-                ball.x - BALL_RADIUS >= target.x + TARGET_WIDTH/2 ||
-                ball.y - BALL_RADIUS >= target.y + TARGET_HEIGHT/2 ||
-                ball.y + BALL_RADIUS <= target.y - TARGET_HEIGHT/2
-            ){
-                return false;
-            }
+        const checkCollision = (ball, element) =>{
+            let leftBorder = (element.x - element.getBounds().width/2);
+            let rightBorder = (element.x + element.getBounds().width/2);
+            let topBorder = (element.y - element.getBounds().height/2);
+            let bottomBorder = (element.y + element.getBounds().height/2);
+            let ballLeftBorder = ball.x - BALL_RADIUS;
+            let ballRightBorder = ball.x + BALL_RADIUS;
+            let ballTopBorder = ball.y - BALL_RADIUS;
+            let ballBottomBorder = ball.y + BALL_RADIUS;
+            let previousBallLeftBorder = ball.lastX - BALL_RADIUS;
+            let previousBallRightBorder = ball.lastX + BALL_RADIUS;
+            let previousBallTopBorder = ball.lastY - BALL_RADIUS;
+            let previousBallBottomBorder = ball.lastY + BALL_RADIUS;
 
-            return true;
+            if(
+                ballLeftBorder <= rightBorder &&
+                ballRightBorder >= leftBorder &&
+                ballTopBorder <= bottomBorder &&
+                ballBottomBorder >= topBorder
+            ){
+                if((ballTopBorder <= bottomBorder) && (previousBallTopBorder > bottomBorder)){
+                    // Hit from the bottom
+                    ball.up = false;
+                    ball.y = bottomBorder + BALL_RADIUS;
+                }
+                if((ballBottomBorder >= topBorder) && (previousBallBottomBorder < topBorder)){
+                    // Hit from the top
+                    ball.up = true;
+                    ball.y = topBorder - BALL_RADIUS;
+                }
+                if((ballLeftBorder <= rightBorder) && (previousBallLeftBorder > rightBorder)){
+                    // Hit from the right
+                    ball.right = true;
+                    ball.x = rightBorder + BALL_RADIUS;
+                }
+                if((ballRightBorder >= leftBorder) && (previousBallRightBorder < leftBorder)){
+                    ball.right = false;
+                    ball.x = leftBorder - BALL_RADIUS;
+                }
+                ball.lastX = ball.x;
+                ball.lastY = ball.y;
+                return true;
+            }
+            return false;
         }
 
         const createTargetGrid = () => {
@@ -101,13 +134,14 @@
             target.graphics.beginFill('#FF1919');
             target.graphics.drawRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
             target.graphics.endFill();
-            stage.addChild(target);
 
             target.regX = TARGET_WIDTH / 2;
             target.regY = TARGET_HEIGHT / 2;
             target.x = x;
             target.y = y;
+            target.setBounds(target.regX, target.regY, TARGET_WIDTH, TARGET_HEIGHT);
 
+            stage.addChild(target);
             targets.push(target);
         }
 
@@ -137,6 +171,9 @@
             player.graphics.drawRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
             player.x = stage.canvas.width / 2 - (PLAYER_WIDTH/2);
             player.y = stage.canvas.height * 0.95;
+            player.regX = PLAYER_WIDTH/2;
+            player.regY = PLAYER_HEIGHT/2;
+            player.setBounds(player.regX, player.regY, PLAYER_WIDTH, PLAYER_HEIGHT);
 
             stage.addChild(player);
         }
