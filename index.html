@@ -20,15 +20,45 @@
         let stage;
         let player;
         let ball;
+        let score = 0;
+        let lives = 3;
+        let scoreText;
 
         const init = () => {
             stage = new createjs.Stage("testCanvas");
             createjs.Ticker.framerate === 60;
             createjs.Ticker.addEventListener("tick", tick);
 
+            createScoreText();
+            addToScore(0);
             createBall();
             createPlayer();
             createTargetGrid();
+        }
+
+        /** SCORE **/
+        const addToScore = (points) =>{
+            score += points;
+            showScoreText();
+        }
+
+        const createScoreText = () => {
+            scoreText = new createjs.Text("", "16px Arial", "#000");
+            scoreText.y = stage.canvas.height - 20;
+            stage.addChild(scoreText);
+        }
+
+        const loseLife = () =>{
+            lives--;
+            showScoreText();
+            ball.xSpeed = 0;
+            ball.ySpeed = 0;
+            ball.x = player.x;
+            ball.y = player.y - PLAYER_HEIGHT/2 - BALL_RADIUS;
+        }
+
+        const showScoreText = () =>{
+            return scoreText.text = `Score: ${score} | Lives: ${lives}`;
         }
 
         const tick = () => {
@@ -48,6 +78,7 @@
 
             for(let i = 0; i < targets.length; i++){
                 if(checkCollision(ball, targets[i])){
+                    addToScore(10);
                     removeTarget(targets[i])
                     targets.splice(i, 1);
                     i--;
@@ -72,8 +103,7 @@
                 ball.up = false;
             }
             if(ball.y + BALL_RADIUS >= stage.canvas.height){
-                ball.y = stage.canvas.height - BALL_RADIUS;
-                ball.up = true;
+                loseLife();
             }
 
             ball.lastX = ball.x;
