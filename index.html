@@ -32,6 +32,7 @@
 
         const init = () => {
             stage = new createjs.Stage("testCanvas");
+            createjs.Touch.enable(stage);
             createjs.Ticker.framerate === 60;
             createjs.Ticker.addEventListener("tick", tick);
 
@@ -51,6 +52,8 @@
             stage.on("stagemousedown", (event) => {
                 startGame();
             });
+
+            stage.canvas.height = window.innerHeight;
         }
 
         const keyDownHandler = (event) => {
