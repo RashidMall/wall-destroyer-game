@@ -16,6 +16,9 @@
         const PLAYER_HEIGHT = 20;
         const BALL_RADIUS = 8;
         const FULL_X_SPEED = 10;
+        const KEY_LEFT = 37;
+        const KEY_RIGHT = 39;
+        const SPACEBAR = 32;
         let targets = [];
         let stage;
         let player;
@@ -24,6 +27,8 @@
         let lives = 3;
         let scoreText;
         let hasGameStarted = false;
+        let isKeyLeftPressed = false;
+        let isKeyRightPressed = false;
 
         const init = () => {
             stage = new createjs.Stage("testCanvas");
@@ -36,15 +41,41 @@
             createBall();
             createTargetGrid();
 
-            stage.on("stagemousedown", (event) => {
-                if(!hasGameStarted){
-                    hasGameStarted = true;
-                    ball.xSpeed = 5;
-                    ball.ySpeed = 5;
-                    ball.up = true;
-                    ball.right = true;
-                }
+            window.onkeyup = keyUpHandler;
+            window.onkeydown = keyDownHandler;
+
+            stage.on("stagemousemove", (event) => {
+                player.x = stage.mouseX;
             });
+
+            stage.on("stagemousedown", (event) => {
+                startGame();
+            });
+        }
+
+        const keyDownHandler = (event) => {
+            switch(event.keyCode){
+                case KEY_LEFT: isKeyLeftPressed = true; break;
+                case KEY_RIGHT: isKeyRightPressed = true; break;
+                case SPACEBAR: startGame(); break;
+            }
+        }
+
+        const keyUpHandler = (event) => {
+            switch(event.keyCode){
+                case KEY_LEFT: isKeyLeftPressed = false; break;
+                case KEY_RIGHT: isKeyRightPressed = false; break;
+            }
+        }
+
+        const startGame = () => {
+            if(!hasGameStarted){
+                hasGameStarted = true;
+                ball.xSpeed = 5;
+                ball.ySpeed = 5;
+                ball.up = true;
+                ball.right = true;
+            }
         }
 
         /** SCORE **/
@@ -75,9 +106,14 @@
         /** /SCORE **/
 
         const tick = () => {
-            player.x = stage.mouseX;
-
             stage.update();
+
+            if(isKeyLeftPressed){
+                player.x -= 20;
+            }
+            if(isKeyRightPressed){
+                player.x += 20;
+            }
 
             // Keep player in the stage
             if(player.x + PLAYER_WIDTH/2 > stage.canvas.width){
