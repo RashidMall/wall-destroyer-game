@@ -47,6 +47,7 @@
             createjs.Ticker.framerate === 60;
             createjs.Ticker.addEventListener("tick", tick);
 
+            loadSound();
             createPlayer();
             createScoreText();
             addToScore(0);
@@ -66,6 +67,16 @@
 
             stage.canvas.height = 500;
         }
+
+        /* SOUND */
+        const loadSound = () => {
+            createjs.Sound.registerSound("assets/bass_hit.ogg", "hit");
+        }
+
+        const playSound = () => {
+            createjs.Sound.play("hit");
+        }
+        /* /SOUND */
 
         const keyDownHandler = (event) => {
             switch(event.keyCode){
@@ -170,7 +181,8 @@
             for(let i = 0; i < targets.length; i++){
                 if(checkCollision(ball, targets[i])){
                     addToScore(10);
-                    removeTarget(targets[i])
+                    removeTarget(targets[i]);
+                    playSound();
                     targets.splice(i, 1);
                     i--;
                 }
