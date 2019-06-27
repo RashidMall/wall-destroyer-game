@@ -84,6 +84,7 @@
 
         const startGame = () => {
             if(!hasGameStarted){
+                console.log("Game started.");
                 hasGameStarted = true;
                 ball.xSpeed = 5;
                 ball.ySpeed = 5;
@@ -105,6 +106,7 @@
         }
 
         const loseLife = () =>{
+            console.log("Lost a life.");
             lives--;
             showScoreText();
             ball.xSpeed = 0;
@@ -133,9 +135,11 @@
             stage.update();
 
             if(isKeyLeftPressed){
+                console.log("Keyboard - Left.");
                 player.x -= 20;
             }
             if(isKeyRightPressed){
+                console.log("Keyboard - Right.");
                 player.x += 20;
             }
 
@@ -169,6 +173,7 @@
             for(let i = 0; i < targets.length; i++){
                 if(checkCollision(ball, targets[i])){
                     addToScore(10);
+                    console.log("Target destroyed!");
                     removeTarget(targets[i])
                     targets.splice(i, 1);
                     i--;
@@ -183,10 +188,12 @@
             if(ball.x + BALL_RADIUS >= stage.canvas.width){
                 ball.x = stage.canvas.width - BALL_RADIUS;
                 ball.right = false;
+                console.log("Right Wall");
             }
             if(ball.x - BALL_RADIUS <= 0){
                 ball.x = BALL_RADIUS;
                 ball.right = true;
+                console.log("Left Wall");
             }
             if(ball.y - BALL_RADIUS <= 0){
                 ball.y = BALL_RADIUS;
@@ -224,20 +231,25 @@
                     // Hit from the bottom
                     ball.up = false;
                     ball.y = bottomBorder + BALL_RADIUS;
+                    console.log("hit top border");
                 }
                 if((ballBottomBorder >= topBorder) && (previousBallBottomBorder < topBorder)){
                     // Hit from the top
                     ball.up = true;
                     ball.y = topBorder - BALL_RADIUS;
+                    console.log("hit bottom border");
                 }
                 if((ballLeftBorder <= rightBorder) && (previousBallLeftBorder > rightBorder)){
                     // Hit from the right
                     ball.right = true;
                     ball.x = rightBorder + BALL_RADIUS;
+                    console.log("hit left border");
                 }
                 if((ballRightBorder >= leftBorder) && (previousBallRightBorder < leftBorder)){
                     ball.right = false;
                     ball.x = leftBorder - BALL_RADIUS;
+                    console.log("hit right border");
+
                 }
                 ball.lastX = ball.x;
                 ball.lastY = ball.y;
@@ -251,7 +263,7 @@
             let midPoint = element.x;
             let endPoint = element.x + element.getBounds().width/2;
 
-            if(ball.X < midPoint){
+            if(ball.x < midPoint){
                 ball.right = false;
                 ball.xSpeed = FULL_X_SPEED - ((ball.x - startPoint)/(midPoint - startPoint)) * FULL_X_SPEED;
             }else{
